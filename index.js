@@ -5,7 +5,7 @@ import express from "express";
 
 const app = express();
 app.use(express.json());
-app.use('/api/v1', authRouter);
+app.use('/api/v1/auth', authRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log("[Server corriendo]\nhttp://localhost:" + PORT + "\n"));
