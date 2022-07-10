@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import { User } from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 //? Lógica de las rutas.
 
@@ -57,10 +58,10 @@ export const login = async (req, res) => {
             return res.status(403).json({ error: "Credenciales incorrectas" });
 
         //? Generamos el token.
-
+        const token = jwt.sign({ uid: user._id }, process.env.JWT_SECRET);
 
         //* Respuestas.
-        console.log("\n................: USUARIO LOGUEADO :................\n", req.body);
+        console.log("\n................: USUARIO LOGUEADO :................\n\nToken: ", token, "\n\n", req.body);
         res.json({Pagina: "Login"});
 
     } catch (error) {
