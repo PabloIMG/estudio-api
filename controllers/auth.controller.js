@@ -62,7 +62,7 @@ export const login = async (req, res) => {
         const { token, expiresIn } = generarToken(user.id);
 
         //* Respuestas.
-        console.log("\n................: USUARIO LOGUEADO :................\n\nToken: ", token, "\nExpiracion: ", expiresIn, "\n\n", req.body);
+        console.log("\n................: USUARIO LOGUEADO :................\n\nToken[", token, "]\nExpiracion: ", expiresIn, "\n\n", req.body);
         res.json({Pagina: "Login"});
 
     } catch (error) {
@@ -78,8 +78,8 @@ export const infoUser = async (req, res) => {
 
     try {
 
-        const user = await User.findById(req.uid);
-        return res.json({ user });
+        const user = await User.findById(req.uid).lean(); //? Con el lean recibimos un objeto simple.
+        return res.json({ id: user.id, email: user.email });
 
     } catch (error) {
         

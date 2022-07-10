@@ -9,9 +9,9 @@ export const requireToken = (req, res, next) => {
         let token = req.headers?.authorization;
 
         if (!token) 
-            throw new Error("No hay token");
+            throw new Error("No Bearer");
 
-        token = token.split(" ")[3];
+        token = token.split(" ")[2];
 
         //? Mostramos info del token.
         const { uid } = jwt.verify(token, process.env.JWT_SECRET);
@@ -25,8 +25,18 @@ export const requireToken = (req, res, next) => {
 
     } catch (error) {
 
-        console.log("\n\nError al validar token!! ", error.message);
-        return res.status(401).json({ error: error.message });
+        //? Errores de validación del token.
+        const tokenErrores = {
+            "invalid signature": "Token inválido",
+            "jwt expired": "Token expirado",
+            "invalid token": "Token no válido",
+            "No Bearer": "Utiliza formato Bearer",
+        }
+
+        console.log("Error al validar el token: ", error);
+        return res
+            .status(401)
+            .json({ error: tokenErrores[error.message] || "Error al obtener info del usuario" });
 
     }
 
