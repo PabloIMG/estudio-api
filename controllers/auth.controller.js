@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import { User } from "../models/User.js";
 import jwt from "jsonwebtoken";
+import { generarToken } from "../utils/generarToken.js";
 
 //? Lógica de las rutas.
 
@@ -58,16 +59,32 @@ export const login = async (req, res) => {
             return res.status(403).json({ error: "Credenciales incorrectas" });
 
         //? Generamos el token.
-        const token = jwt.sign({ uid: user._id }, process.env.JWT_SECRET);
+        const { token, expiresIn } = generarToken(user.id);
 
         //* Respuestas.
-        console.log("\n................: USUARIO LOGUEADO :................\n\nToken: ", token, "\n\n", req.body);
+        console.log("\n................: USUARIO LOGUEADO :................\n\nToken: ", token, "\nExpiracion: ", expiresIn, "\n\n", req.body);
         res.json({Pagina: "Login"});
 
     } catch (error) {
 
         console.log("\n................: ERROR AL LOGIN :................\n", error);
         res.status(500).json({ error: "Error al loguearse" });
+
+    }
+
+}
+
+export const infoUser = async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.uid);
+        return res.json({ user });
+
+    } catch (error) {
+        
+        console.log("Error al obtener info del usuario: ", error);
+        return res.status(500).json({ error: "Error interno" });
 
     }
 
