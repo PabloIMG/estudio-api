@@ -1,0 +1,65 @@
+<!-- Ejemplo de ruta protegida -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruta Protegida</title>
+</head>
+<body>
+
+    <h1>Ruta Protegida</h1>
+
+    <div id="app">
+
+        <h2>Email: </h2>
+        <h3 id="email" /h3>
+
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', async e => {
+
+            try {
+
+                //! Obtener token del localStorage.
+                //const token = localStorage.getItem('token');
+
+                const token = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MmJmYTAwZjM5NGExNmQ4OGE4YTgyYzAiLCJpYXQiOjE2NTc1Njk4MzYsImV4cCI6MTY1NzU3MDczNn0.0FpEIqM2cQa2tWjA4BtCGqE2HSu0ziy2gluBNftQXSI' // Por defecto.
+                
+                const res = await fetch('/api/v1/auth/protected', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+
+                //? Nos aseguramos de que todo esté bien.
+                console.log("Res Ok: ", res.ok, "\nRes Status: ", res.status);
+
+                //? Respuesta del servidor.
+                const data = await res.json();
+                console.log("Data: ", data);
+
+                //? Mostramos el email.
+                if(res.ok) {
+
+                    document.getElementById('email').textContent = data.email;
+
+                }
+
+            } catch (error) {
+                
+                console.log("Error en protected: ", error);
+
+            }
+
+        });
+
+    </script>
+    
+</body>
+</html>

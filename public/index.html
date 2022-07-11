@@ -1,0 +1,69 @@
+<!-- Prueba para ver el comportamiento del Backend. -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    
+    <form id="form">
+
+        <input type="email" value="pablo1@test.com" id="email">
+        <input type="password" value="123456" id="password">
+
+        <button type="submit">Acceder</button>
+
+    </form>
+
+    <script>
+
+        // Capturamos datos del formulario.
+        const form = document.getElementById('form');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+
+        form.addEventListener("submit", async (e) => {
+
+            e.preventDefault();
+
+            try {
+                
+                console.log("Email: " + email.value);
+                console.log("Password: " + password.value);
+
+                //? Hacemos solicitud mediante fetch.
+                const res = await fetch("/api/v1/auth/login", {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email.value,
+                        password: password.value
+                    })
+
+                })
+
+                //? Nos aseguramos de que todo esté bien.
+                console.log(res);
+
+                //! Guardar token en el localStorage.
+                //const {token} = await res.json();
+                //localStorage.setItem('token', token);
+
+                //? Esperamos método del response.
+                const data = await res.json();
+
+            } catch (error) {
+                console.log("\nError en el form: ", error);
+            }
+        });
+
+    </script>
+
+</body>
+</html>

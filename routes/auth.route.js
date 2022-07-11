@@ -21,7 +21,7 @@ router.get(
 );
 
 //* login.
-router.get(
+router.post(
     
     "/login",
     [
