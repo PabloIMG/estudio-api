@@ -24,17 +24,21 @@
 
             try {
 
-                //! Obtener token del localStorage.
+                //!! Obtener token del localStorage.
                 //const token = localStorage.getItem('token');
 
-                const token = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MmJmYTAwZjM5NGExNmQ4OGE4YTgyYzAiLCJpYXQiOjE2NTc1Njk4MzYsImV4cCI6MTY1NzU3MDczNn0.0FpEIqM2cQa2tWjA4BtCGqE2HSu0ziy2gluBNftQXSI' // Por defecto.
+                //const token = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MmJmYTAwZjM5NGExNmQ4OGE4YTgyYzAiLCJpYXQiOjE2NTc1Njk4MzYsImV4cCI6MTY1NzU3MDczNn0.0FpEIqM2cQa2tWjA4BtCGqE2HSu0ziy2gluBNftQXSI' // Por defecto.
                 
                 const res = await fetch('/api/v1/auth/protected', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
+                        //'Authorization': `Bearer ${token}` // Por defecto sin cookies.
+                    },
+
+                    // Por cada solicitud que estamos haciendo al servidor incluya las credenciales
+                    //  que en este caso es la cookie con nombre "token".
+                    credentials: "include",
                 })
 
                 //? Nos aseguramos de que todo esté bien.

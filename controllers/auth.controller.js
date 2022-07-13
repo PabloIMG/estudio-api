@@ -61,6 +61,18 @@ export const login = async (req, res) => {
         //? Generamos el token.
         const { token, expiresIn } = generarToken(user.id);
 
+        //? Generamos la cookie.
+        /*
+            httpOnly: Nos dice que la cookie solo se puede acceder desde el servidor.
+            secure: Es para que la cookie solo se pueda acceder desde HTTPS. pero como ahora no estamos
+                        en un servidor HTTPS, no se puede usar por lo tanto en el json indicamos que
+                        si estamos usando algo distinto a HTTPS lo debe marcar como false.
+        */
+        res.cookie("token", token, { // token es el cookieValue.
+            httpOnly: true,
+            secure: !(process.env.MODO === "developer")
+        })
+
         //* Respuestas.
         console.log("\n................: USUARIO LOGUEADO :................\n\nToken[", token, "]\nExpiracion: ", expiresIn, "\n\n", req.body);
         res.json({Pagina: "Login"});
