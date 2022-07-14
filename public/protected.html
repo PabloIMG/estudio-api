@@ -20,7 +20,7 @@
 
     <script>
 
-        document.addEventListener('DOMContentLoaded', async e => {
+        document.addEventListener('DOMContentLoaded', async (e) => {
 
             try {
 
@@ -29,6 +29,16 @@
 
                 //const token = ' eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MmJmYTAwZjM5NGExNmQ4OGE4YTgyYzAiLCJpYXQiOjE2NTc1Njk4MzYsImV4cCI6MTY1NzU3MDczNn0.0FpEIqM2cQa2tWjA4BtCGqE2HSu0ziy2gluBNftQXSI' // Por defecto.
                 
+                //? Nos aseguramos de que exista el refreshToken.
+                const resToken = await fetch('/api/v1/auth/refresh', {
+                    method: 'GET',
+                    credentials: "include",
+                });
+
+                const { token } = await resToken.json();
+
+                console.log("\nToken Refresh: ", token);
+
                 const res = await fetch('/api/v1/auth/protected', {
                     method: 'GET',
                     headers: {
@@ -38,7 +48,7 @@
 
                     // Por cada solicitud que estamos haciendo al servidor incluya las credenciales
                     //  que en este caso es la cookie con nombre "token".
-                    credentials: "include",
+                    //credentials: "include",
                 })
 
                 //? Nos aseguramos de que todo esté bien.

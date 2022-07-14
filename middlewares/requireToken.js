@@ -41,17 +41,20 @@ export const requireTokenCookie = (req, res, next) => {
 }
 
 //? Validación del Token.
-export const requireToken = (req, res, next) => {
+export const requireToken = async (req, res, next) => {
 
     try {
 
         //? Evaluamos la existencia del token.
-        let token = req.headers?.authorization;
+        //let token = req.headers?.authorization;
+
+        let token = req.cookies.refreshToken;
+
+        //token = " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MmJmYTAwZjM5NGExNmQ4OGE4YTgyYzAiLCJpYXQiOjE2NTc3NTc5OTAsImV4cCI6MTY2MDM0OTk5MH0.MH4ZksON92_sb1f5uC_Sfx4HmrzDv5WIIKCUoO6mAyo"
+        console.log("REQUIRETOKEN [", token, "]");
 
         if (!token) 
             throw new Error("No Bearer");
-
-        token = token.split(" ")[2];
 
         //? Mostramos info del token.
         const { uid } = jwt.verify(token, process.env.JWT_SECRET);

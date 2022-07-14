@@ -1,5 +1,5 @@
 import express from 'express';
-import { infoUser, login, register } from '../controllers/auth.controller.js';
+import { infoUser, login, register, refreshToken } from '../controllers/auth.controller.js';
 import { body } from 'express-validator';
 import { validacionCampos } from '../middlewares/validacionCampos.js';
 import { requireToken, requireTokenCookie } from '../middlewares/requireToken.js';
@@ -34,9 +34,12 @@ router.post(
 );
 
 //* Función prueba para ver comportamiento del token.
-//router.get("/protected", requireToken, infoUser);
+router.get("/protected", requireToken, infoUser);
+
+//* Ruta para validar el refreshToken el cual siendo valido nos devuelve el token que puede hacer peticiones.
+router.get("/refresh", refreshToken);
 
 //* Función prueba para ver comportamiento del token en una cookie.
-router.get("/protected", requireTokenCookie, infoUser);
+//router.get("/protected", requireTokenCookie, infoUser);
 
 export default router;

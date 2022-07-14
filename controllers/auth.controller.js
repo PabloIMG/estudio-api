@@ -1,7 +1,7 @@
 import { validationResult } from "express-validator";
 import { User } from "../models/User.js";
 import jwt from "jsonwebtoken";
-import { generarToken } from "../utils/generarToken.js";
+import { generarRefreshToken, generarToken } from "../utils/generarToken.js";
 
 //? Lógica de las rutas.
 
@@ -60,6 +60,7 @@ export const login = async (req, res) => {
 
         //? Generamos el token.
         const { token, expiresIn } = generarToken(user.id);
+        generarRefreshToken(user.id, res);
 
         //? Generamos la cookie.
         /*
@@ -68,10 +69,10 @@ export const login = async (req, res) => {
                         en un servidor HTTPS, no se puede usar por lo tanto en el json indicamos que
                         si estamos usando algo distinto a HTTPS lo debe marcar como false.
         */
-        res.cookie("token", token, { // token es el cookieValue.
-            httpOnly: true,
-            secure: !(process.env.MODO === "developer")
-        })
+        // res.cookie("token", token, { // token es el cookieValue.
+        //     httpOnly: true,
+        //     secure: !(process.env.MODO === "developer")
+        // })
 
         //* Respuestas.
         console.log("\n................: USUARIO LOGUEADO :................\n\nToken[", token, "]\nExpiracion: ", expiresIn, "\n\n", req.body);
@@ -97,6 +98,31 @@ export const infoUser = async (req, res) => {
         
         console.log("Error al obtener info del usuario: ", error);
         return res.status(500).json({ error: "Error interno" });
+
+    }
+
+}
+
+//? Hacemos validación del refresh token.
+export const refreshToken = (req, res) => {
+
+    try {
+        
+        const refreshTokenCookie = req.cookies.refreshToken;
+    
+        if (!refreshTokenCookie) throw new Error("\n\nNo hay refresh token!!");
+
+        const { uid } = jwt.verify(refreshTokenCookie, process.env.JWT_REFRESH);
+
+        const { token, expiresIn } = generarToken(uid);
+
+        console.log("\n\nRefresh Token [", token, "]\nExpiracion: ", expiresIn, "\n\n");
+        return res.json({ token, expiresIn });
+
+    } catch (error) {
+
+        console.log("\nError al obtener refresh token: ", error);
+        return res.status(401).json({ error: "No hay refresh token" });
 
     }
 
